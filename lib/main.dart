@@ -23,7 +23,7 @@ class GHFlutter extends StatefulWidget {
 }
 
 class GHFlutterState extends State<GHFlutter> {
-  var _members = [];
+  var _members = <Member>[];
   final _biggerFont = const TextStyle(fontSize: 18.0);
 
   @override
@@ -33,10 +33,13 @@ class GHFlutterState extends State<GHFlutter> {
         title: Text(Strings.appTitle),
       ),
       body: ListView.builder(
-          padding: const EdgeInsets.all(16.0),
-          itemCount: _members.length,
+          itemCount: _members.length * 2,
           itemBuilder: (BuildContext context, int position) {
-            return _buildRow(position);
+            if (position.isOdd) return Divider();
+
+            final index = position ~/ 2;
+
+            return _buildRow(index);
           }),
     );
   }
@@ -53,12 +56,30 @@ class GHFlutterState extends State<GHFlutter> {
     String dataURL = "https://api.github.com/orgs/raywenderlich/members";
     http.Response response = await http.get(dataURL);
     setState(() {
-      _members = json.decode(response.body);
-      dev.log('_members: $_members');
+      final membersJSON = json.decode(response.body);
+
+      for (var memberJSON in membersJSON) {
+        final member = Member(memberJSON["login"]);
+        //dev.log('member: $member');
+        _members.add(member);
+      }
     });
   }
 
   Widget _buildRow(int i) {
-    return ListTile(title: Text("${_members[i]["login"]}", style: _biggerFont));
+    return Padding(
+        padding: const EdgeInsets.all(10.0),
+        child:
+            ListTile(title: Text("${_members[i].login}", style: _biggerFont)));
+  }
+}
+
+class Member {
+  final String login;
+
+  Member(this.login) {
+    if (login == null) {
+      throw ArgumentError("login of Member cannot be null. Received: '$login'");
+    }
   }
 }
