@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'member.dart';
+import 'memberBean.dart';
 import 'strings.dart';
 import 'dart:convert';
 
@@ -10,7 +10,7 @@ class GHFlutter extends StatefulWidget {
 }
 
 class GHFlutterState extends State<GHFlutter> {
-  var _members = <Member>[];
+  var _members = <MemberBean>[];
   final _biggerFont = const TextStyle(fontSize: 18.0);
 
   @override
@@ -46,7 +46,8 @@ class GHFlutterState extends State<GHFlutter> {
       final membersJSON = json.decode(response.body);
 
       for (var memberJSON in membersJSON) {
-        final member = Member(memberJSON["login"], memberJSON["avatar_url"]);
+        final member =
+            MemberBean(memberJSON["login"], memberJSON["avatar_url"]);
         //dev.log('member: $member');
         _members.add(member);
       }

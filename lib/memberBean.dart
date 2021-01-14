@@ -1,8 +1,8 @@
-class Member {
+class MemberBean {
   final String login;
   final String avatarUrl;
 
-  Member(this.login, this.avatarUrl) {
+  MemberBean(this.login, this.avatarUrl) {
     if (login == null) {
       throw ArgumentError("login of Member cannot be null. Received: '$login'");
     }
